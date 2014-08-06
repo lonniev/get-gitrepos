@@ -21,12 +21,13 @@ default['get-gitrepos']['repos'] =
      'tycho-demo' =>
      {
          'user'=> {
-             'fullname' => 'Lonnie VanZandt',
-             'username' => 'lonniev',
-             'password' => '$1$gYfxkLO3$zCSVaHpGUZ.8jFc4QZR2R0',
+             'fullname' => 'Ima Coder',
+             'username' => 'icoder',
+             'password' => '$1$AjPVIlOd$.T6f5fjD3x1su.bNB2SDQ.',
              'shell'    => '/bin/bash'
          },
-         'destination' => '~lonniev/workspace/tycho',
+         
+         'destination' => '~icoder/workspace/tycho/org.eclipse.tycho-demo',
          'url' => 'git://git.eclipse.org/gitroot/tycho/org.eclipse.tycho-demo.git',
          'revision' => 'master'
      }
