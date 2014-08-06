@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-node['get-gitrepos']['repos'].each do |repo|
+node['get-gitrepos']['repos'].each do |reponame, repo|
     
-    log "the contents of repo" do
-        message "Current repo entry offers username of " + repo['user']['username'] + "."
+    log "the username of the user for the repo" do
+        message repo['user']['username']
         level :info
     end
     
