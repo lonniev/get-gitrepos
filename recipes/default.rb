@@ -19,12 +19,12 @@
 
 node['get-gitrepos']['repos'].each do |repo|
     
-    user repo['user'] do |aUser|
+    user repo['user']['username'] do
         action :create
-        username aUser['username']
-        comment aUser['fullname']
+        username repo['user']['username']
+        comment repo['user']['fullname']
         supports :manage_home=>true
-        shell aUser['shell'] || '/bin/bash'
+        shell repo['user']['shell'] || '/bin/bash'
     end
     
     execute "force new password for user" do
