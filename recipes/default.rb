@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+# first pass assures that all users and paths are in place
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
     getHomeCmd = Chef::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
@@ -46,13 +47,6 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         not_if { ::File.exists?( userHomePath ) }
     end
     
-    execute "force new password for user" do
-        
-        forcePasswordAge = "chage -d 0 " << gitUserName
-
-        command forcePasswordAge
-    end
-
     destPath = repo['destination']
     
     execute "check for destination directory" do
@@ -65,7 +59,11 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         creates destPath
         not_if { ::File.exists?( destPath ) }
     end
+end
 
+# second pass does the requested git clones
+node['get-gitrepos']['repos'].each do |reponame, repo|
+    
     destPath = ::File.expand_path( repo['destination'] )
 
     git destPath do
