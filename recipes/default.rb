@@ -19,27 +19,29 @@
 
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
-    log "the username of the user for the repo" do
-        message repo['user']['username']
-        level :info
-    end
+    gitUserName = repo['user']['username']
+    userHomePath = "~" gitUserName
     
-    user repo['user']['username'] do
+    user gitUserName do
         action :create
-        username repo['user']['username']
+        username gitUserName
         comment repo['user']['fullname']
         supports :manage_home=>true
         shell repo['user']['shell'] || '/bin/bash'
     end
     
     execute "check for home directory" do
-        command "mkdir ~" repo['user']['username'] ";chown " repo['user']['username'] "." repo['user']['username'] " ~" repo['user']['username']
-        creates "~" repo['user']['username']
-        not_if { ::File.exists?("~" repo['user']['username'])}
+        mkHomeDir = "mkdir " userHomePath ";chown " gitUserName "." gitUserName userHomePath
+        command mkHomeDir
+        creates userHomePath
+        not_if { ::File.exists?( userHomePath )}
     end
     
     execute "force new password for user" do
-        command "chage -d 0 " repo['user']['username']
+        
+        forcePasswdAge = "chage -d 0 " gitUserName
+
+        command forcePasswdAge
     end
     
     git repo['destination'] do
