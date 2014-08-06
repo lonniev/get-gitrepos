@@ -45,7 +45,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     
     destPath = repo['destination']
     
-    destPath["~"] = "#{homeDir}/"
+    destPath = homeDir << "/" << "workspace/tycho/"
     
     directory destPath do
         owner gitUserName
