@@ -31,17 +31,20 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     end
     
     execute "check for home directory" do
-        mkHomeDir = "mkdir " << userHomePath << ";chown " << gitUserName << "." << gitUserName userHomePath
+        
+        mkHomeDir = "mkdir -p " << userHomePath << "; chown " << gitUserName << "." << gitUserName << " " << userHomePath
+        
         command mkHomeDir
+        
         creates userHomePath
-        not_if { ::File.exists?( userHomePath )}
+        not_if { ::File.exists?( userHomePath ) }
     end
     
     execute "force new password for user" do
         
-        forcePasswdAge = "chage -d 0 " << gitUserName
+        forcePasswordAge = "chage -d 0 " << gitUserName
 
-        command forcePasswdAge
+        command forcePasswordAge
     end
     
     git repo['destination'] do
