@@ -24,7 +24,7 @@ node['get-gitrepos']['repos'].each do |repo|
         username repo['user']['username']
         comment repo['user']['fullname']
         supports :manage_home=>true
-        shell repo['user']['shell'] || '/bin/bash'
+        shell repo['user']['shell']
     end
     
     execute "force new password for user" do
