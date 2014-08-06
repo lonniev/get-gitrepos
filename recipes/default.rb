@@ -35,12 +35,12 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     end
     
     user gitUserName do
-        action :create
+        action   :create
         username gitUserName
         password repo['user']['password']
-        comment repo['user']['fullname']
-        supports :manage_home=>true
-        shell repo['user']['shell'] || '/bin/bash'
+        comment  repo['user']['fullname']
+        home     userHomePath
+        shell    repo['user']['shell'] || '/bin/bash'
     end
     
     destPath = repo['destination']
