@@ -25,7 +25,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     homeDir = getHomeCmd.stdout.chomp
     
     gitUserName = repo['user']['username']
-    userHomePath = homeDir << "/" << gitUserName
+    userHomePath = "#{homeDir}/#{gitUserName}"
     
     directory userHomePath do
         owner gitUserName
@@ -43,10 +43,8 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         shell    repo['user']['shell'] || '/bin/bash'
     end
     
-    destPath = repo['destination']
-    
-    destPath = homeDir << "/" << "workspace/tycho/"
-    
+    destPath = repo['destination'].sub( /~/, "#{homeDir}/" )
+       
     directory destPath do
         owner gitUserName
         group gitUserName
