@@ -29,17 +29,22 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         username repo['user']['username']
         comment repo['user']['fullname']
         supports :manage_home=>true
-        shell repo['user']['shell']
+        shell repo['user']['shell'] || '/bin/bash'
+    end
+    
+    execute "check for home directory" do
+        command "mkdir ~" repo['user']['username'] ";chown " repo['user']['username'] "." repo['user']['username'] " ~" repo['user']['username']
+        creates "~" repo['user']['username']
+        not_if { ::File.exists?("~" repo['user']['username'])}
     end
     
     execute "force new password for user" do
-        command "chage -d 0 " + repo['user']['username']
+        command "chage -d 0 " repo['user']['username']
     end
     
     git repo['destination'] do
         repository repo['url']
         reference  repo['revision'] || 'master'
-        user       repo['user'] || 'username'
         action :sync
     end
 end
