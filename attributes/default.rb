@@ -22,7 +22,7 @@ default['get-gitrepos']['repos'] =
      {
          'user'=> { 'fullname' => 'Lonnie VanZandt', 'username' => 'lonniev', 'shell' => '/bin/bash' },
          'destination' => '~lonniev/workspace/tycho/org.eclipse.tycho-demo',
-         'url' => 'http://git.eclipse.org/c/tycho/org.eclipse.tycho-demo.git',
+         'url' => 'git://git.eclipse.org/gitroot/tycho/org.eclipse.tycho-demo.git',
          'revision' => 'master'
      }
  }
