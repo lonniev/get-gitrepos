@@ -20,7 +20,7 @@
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
     gitUserName = repo['user']['username']
-    userHomePath = "~" gitUserName
+    userHomePath = "~" << gitUserName
     
     user gitUserName do
         action :create
@@ -31,7 +31,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     end
     
     execute "check for home directory" do
-        mkHomeDir = "mkdir " userHomePath ";chown " gitUserName "." gitUserName userHomePath
+        mkHomeDir = "mkdir " << userHomePath << ";chown " << gitUserName << "." << gitUserName userHomePath
         command mkHomeDir
         creates userHomePath
         not_if { ::File.exists?( userHomePath )}
@@ -39,7 +39,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     
     execute "force new password for user" do
         
-        forcePasswdAge = "chage -d 0 " gitUserName
+        forcePasswdAge = "chage -d 0 " << gitUserName
 
         command forcePasswdAge
     end
