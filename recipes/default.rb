@@ -43,7 +43,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         shell    repo['user']['shell'] || '/bin/bash'
     end
     
-    destPath = repo['destination']
+    destPath = repo['destination'].sub( /\~/, "#{homeDir}/" )
     
     directory destPath do
         owner gitUserName
