@@ -25,6 +25,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     user gitUserName do
         action :create
         username gitUserName
+        password repo['user']['password']
         comment repo['user']['fullname']
         supports :manage_home=>true
         shell repo['user']['shell'] || '/bin/bash'
