@@ -19,6 +19,11 @@
 
 node['get-gitrepos']['repos'].each do |repo|
     
+    log "the contents of repo" do
+        message "Current repo entry offers username of " + repo['user']['username'] + "."
+        level :info
+    end
+    
     user repo['user']['username'] do
         action :create
         username repo['user']['username']
