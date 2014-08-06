@@ -19,8 +19,13 @@
 
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
+    getHomeCmd = Chef::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
+    getHomeCmd.run_command
+
+    homeDir = getHomeCmd.stdout
+    
     gitUserName = repo['user']['username']
-    userHomePath = ::File.expand_path( "~" << gitUserName )
+    userHomePath = homeDir << "/" << gitUserName
     
     user gitUserName do
         action :create
@@ -48,7 +53,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         command forcePasswordAge
     end
 
-    destPath = ::File.expand_path( repo['destination'] )
+    destPath = repo['destination']
     
     execute "check for destination directory" do
         
@@ -56,9 +61,12 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         
         command mkDestDir
         
+        cwd "/"
         creates destPath
         not_if { ::File.exists?( destPath ) }
     end
+
+    destPath = ::File.expand_path( repo['destination'] )
 
     git destPath do
         repository repo['url']
