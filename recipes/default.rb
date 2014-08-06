@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-# first pass assures that all users and paths are in place
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
     getHomeCmd = Chef::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
@@ -28,6 +27,13 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     gitUserName = repo['user']['username']
     userHomePath = homeDir << "/" << gitUserName
     
+    directory userHomePath do
+        owner gitUserName
+        group gitUserName
+        recursive true
+        action :create
+    end
+    
     user gitUserName do
         action :create
         username gitUserName
@@ -37,34 +43,14 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         shell repo['user']['shell'] || '/bin/bash'
     end
     
-    execute "check for home directory" do
-        
-        mkHomeDir = "mkdir -p " << userHomePath << "; chown " << gitUserName << "." << gitUserName << " " << userHomePath
-        
-        command mkHomeDir
-        
-        creates userHomePath
-        not_if { ::File.exists?( userHomePath ) }
-    end
-    
     destPath = repo['destination']
     
-    execute "check for destination directory" do
-        
-        mkDestDir = "mkdir -p " << destPath << "; chown " << gitUserName << "." << gitUserName << " " << destPath
-        
-        command mkDestDir
-        
-        cwd "/"
-        creates destPath
-        not_if { ::File.exists?( destPath ) }
+    directory destPath do
+        owner gitUserName
+        group gitUserName
+        recursive true
+        action :create
     end
-end
-
-# second pass does the requested git clones
-node['get-gitrepos']['repos'].each do |reponame, repo|
-    
-    destPath = ::File.expand_path( repo['destination'] )
 
     git destPath do
         repository repo['url']
