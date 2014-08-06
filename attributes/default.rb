@@ -18,12 +18,12 @@
 
 default['get-gitrepos']['repos'] =
  {
-     'tycho-demo':
+     'tycho-demo' =>
      {
-         'user': { 'fullname': 'Lonnie VanZandt', 'username': 'lonniev', 'shell': '/bin/bash' },
-         'destination': '~lonniev/workspace/tycho/org.eclipse.tycho-demo',
-         'url': 'http://git.eclipse.org/c/tycho/org.eclipse.tycho-demo.git',
-         'revision': 'master'
+         'user'=> { 'fullname' => 'Lonnie VanZandt', 'username' => 'lonniev', 'shell' => '/bin/bash' },
+         'destination' => '~lonniev/workspace/tycho/org.eclipse.tycho-demo',
+         'url' => 'http://git.eclipse.org/c/tycho/org.eclipse.tycho-demo.git',
+         'revision' => 'master'
      }
  }
 
