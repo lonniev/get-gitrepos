@@ -42,9 +42,20 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         home     userHomePath
         shell    repo['user']['shell'] || '/bin/bash'
     end
+ 
+    xSessionFile = "#{userHomePath}/.xsession"
+    
+    file xSessionFile do
+        owner gitUserName
+        group gitUserName
+        mode 0644
+        content repo['user']['xsession']
+        
+        action :create_if_missing
+    end
     
     destPath = repo['destination'].sub( /~/, "#{homeDir}/" )
-       
+    
     directory destPath do
         owner gitUserName
         group gitUserName

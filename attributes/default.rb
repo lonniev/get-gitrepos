@@ -24,7 +24,8 @@ default['get-gitrepos']['repos'] =
              'fullname' => 'Ima Coder',
              'username' => 'icoder',
              'password' => '$1$AjPVIlOd$.T6f5fjD3x1su.bNB2SDQ.',
-             'shell'    => '/bin/bash'
+             'shell'    => '/bin/bash',
+             'xsession' => 'xfce4-session'
          },
          
          'destination' => '~icoder/workspace/tycho/org.eclipse.tycho-demo',
