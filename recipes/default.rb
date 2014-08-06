@@ -19,10 +19,10 @@
 
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
-    getHomeCmd = Chef::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
+    getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
     getHomeCmd.run_command
 
-    homeDir = getHomeCmd.stdout
+    homeDir = getHomeCmd.stdout.chomp
     
     gitUserName = repo['user']['username']
     userHomePath = homeDir << "/" << gitUserName
