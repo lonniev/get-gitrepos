@@ -52,6 +52,8 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         action :create
     end
 
+    destPath = ::File.expand_path( destPath )
+
     git destPath do
         repository repo['url']
         reference  repo['revision'] || 'master'
