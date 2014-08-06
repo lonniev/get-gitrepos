@@ -43,7 +43,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         shell    repo['user']['shell'] || '/bin/bash'
     end
     
-    destPath = repo['destination'].sub( /\~/, "#{homeDir}/" )
+    destPath = repo['destination'].sub( /~/, "#{homeDir}/" )
     
     directory destPath do
         owner gitUserName
@@ -56,7 +56,9 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
 
     git destPath do
         repository repo['url']
-        reference  repo['revision'] || 'master'
-        action :sync
+        reference  repo['remote-branch-name'] || 'master'
+        revision   repo['revision'] || 'HEAD'
+        checkout_branch repo['local-branch-name']
+        action :checkout
     end
 end

@@ -29,7 +29,9 @@ default['get-gitrepos']['repos'] =
          
          'destination' => '~icoder/workspace/tycho/org.eclipse.tycho-demo',
          'url' => 'git://git.eclipse.org/gitroot/tycho/org.eclipse.tycho-demo.git',
-         'revision' => 'master'
+         'remote-branch-name' => 'master',
+         'revision' => 'HEAD',
+         'local-branch-name' => 'icoder_cloned_master'
      }
  }
 
