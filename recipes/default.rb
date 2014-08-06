@@ -20,7 +20,7 @@
 node['get-gitrepos']['repos'].each do |reponame, repo|
     
     gitUserName = repo['user']['username']
-    userHomePath = "~" << gitUserName
+    userHomePath = ::File.expand_path( "~" << gitUserName )
     
     user gitUserName do
         action :create
@@ -48,7 +48,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         command forcePasswordAge
     end
 
-    destPath = repo['destination']
+    destPath = ::File.expand_path( repo['destination'] )
     
     execute "check for destination directory" do
         
@@ -60,7 +60,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         not_if { ::File.exists?( destPath ) }
     end
 
-    git repo['destination'] do
+    git destPath do
         repository repo['url']
         reference  repo['revision'] || 'master'
         action :sync
