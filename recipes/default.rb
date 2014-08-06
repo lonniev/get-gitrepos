@@ -46,7 +46,19 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
 
         command forcePasswordAge
     end
+
+    destPath = repo['destination']
     
+    execute "check for destination directory" do
+        
+        mkDestDir = "mkdir -p " << destPath << "; chown " << gitUserName << "." << gitUserName << " " << destPath
+        
+        command mkDestDir
+        
+        creates destPath
+        not_if { ::File.exists?( destPath ) }
+    end
+
     git repo['destination'] do
         repository repo['url']
         reference  repo['revision'] || 'master'
