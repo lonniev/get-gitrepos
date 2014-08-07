@@ -19,7 +19,7 @@
 
 node['get-gitrepos']['repos'].each do |repoSpec|
     
-    repoName, repo = repoSpec
+  repoSpec.each do |repoName, repo|
     
     getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
     getHomeCmd.run_command
@@ -103,4 +103,5 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         message "Cloned #{repoName} for user #{gitUserName} into #{destPath}."
         level :info
     end
+  end
 end
