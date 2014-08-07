@@ -44,6 +44,10 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     end
     
     group "tsusers" do
+        action :create
+    end
+    
+    group "tsusers" do
         action :modify
         members gitUserName
         append  true
