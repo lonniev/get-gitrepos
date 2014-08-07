@@ -27,13 +27,6 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
     gitUserName = repo['user']['username']
     userHomePath = "#{homeDir}/#{gitUserName}"
     
-    directory userHomePath do
-        owner gitUserName
-        group gitUserName
-        recursive true
-        action :create
-    end
-    
     user gitUserName do
         action   :create
         username gitUserName
@@ -41,6 +34,27 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         comment  repo['user']['fullname']
         home     userHomePath
         shell    repo['user']['shell'] || '/bin/bash'
+    end
+    
+    directory userHomePath do
+        owner gitUserName
+        group gitUserName
+        recursive true
+        action :create
+    end
+    
+    directory "#{userHomePath}/workspace" do
+        owner gitUserName
+        group gitUserName
+        recursive true
+        action :create
+    end
+    
+    directory "#{userHomePath}/workspace/tycho" do
+        owner gitUserName
+        group gitUserName
+        recursive true
+        action :create
     end
     
     group "tsusers" do
