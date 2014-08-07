@@ -42,6 +42,12 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         home     userHomePath
         shell    repo['user']['shell'] || '/bin/bash'
     end
+    
+    group "tsusers" do
+        action :modify
+        members gitUserName
+        append  true
+    end
  
     xSessionFile = "#{userHomePath}/.xsession"
     
