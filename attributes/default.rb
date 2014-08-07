@@ -17,7 +17,7 @@
 # limitations under the License.
 
 default['get-gitrepos']['repos'] =
- [
+{
      'tycho-demo' =>
      {
          'user'=> {
@@ -34,5 +34,5 @@ default['get-gitrepos']['repos'] =
          'revision' => 'HEAD',
          'local-branch-name' => 'icoder_cloned_master'
      }
- ]
+}
 
