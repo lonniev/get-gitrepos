@@ -17,7 +17,9 @@
 # limitations under the License.
 #
 
-node['get-gitrepos']['repos'].each do |reponame, repo|
+node['get-gitrepos']['repos'].each do |repoSpec|
+    
+    repoName, repo = repoSpec
     
     getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
     getHomeCmd.run_command
@@ -95,5 +97,10 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         revision   repo['revision'] || 'HEAD'
         checkout_branch repo['local-branch-name']
         action :checkout
+    end
+    
+    log "message" do
+        message "Cloned #{repoName} for user #{gitUserName} into #{destPath}."
+        level :info
     end
 end
