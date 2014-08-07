@@ -56,7 +56,7 @@ node['get-gitrepos']['repos'].each do |reponame, repo|
         recursive true
         action :create
     end
-    
+
     group "tsusers" do
         action :create
     end
