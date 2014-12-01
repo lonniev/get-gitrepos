@@ -113,6 +113,12 @@ EOT
     ssh_known_hosts_entry 'bitbucket.org'
 
 # in the context of the requested user, clone, checkout, and branch the repo
+    execute "who am i" do
+        user gitUserName
+        
+        command "id;foobar"
+    end
+    
     execute "as user #{gitUserName}, clone #{repo['url']}" do
         cwd destPath
         user gitUserName
