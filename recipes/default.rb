@@ -94,7 +94,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         mode 0600
    
         content <<-EOT
-Host bitbucket.org
+Host *
   StrictHostKeyChecking no
   IdentityFile #{userHomePath}/.ssh/id_rsa
   IdentitiesOnly yes
@@ -107,6 +107,14 @@ EOT
         mode 0600
         
         content git_key['private']
+    end
+    
+    file "#{userHomePath}/.ssh/id_rsa.pub" do
+        owner gitUserName
+        group gitUserName
+        mode 0644
+        
+        content git_key['public']
     end
     
 # add several likely SSH hosts with git repositories
