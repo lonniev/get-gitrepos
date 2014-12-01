@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe "ssh_known_hosts"
+
 node['get-gitrepos']['repos'].each do |repoSpec|
     
   repoSpec.each do |repoName, repo|
@@ -45,20 +47,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create
     end
     
-    directory "#{userHomePath}/workspace" do
-        owner gitUserName
-        group gitUserName
-        recursive true
-        action :create
-    end
-    
-    directory "#{userHomePath}/workspace/tycho" do
-        owner gitUserName
-        group gitUserName
-        recursive true
-        action :create
-    end
-
     group "tsusers" do
         action :create
     end
@@ -121,6 +109,10 @@ EOT
         
         content git_key['private']
     end
+    
+# add several likely SSH hosts with git repositories
+    ssh_known_hosts_entry 'github.com'
+    ssh_known_hosts_entry 'bitbucket.org'
 
     git destPath do
         repository repo['url']
