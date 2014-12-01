@@ -91,12 +91,21 @@ node['get-gitrepos']['repos'].each do |repoSpec|
 
     destPath = ::File.expand_path( destPath )
 
+    git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
+    
+    file "#{userHomePath}/.ssh/id_rsa" do
+        content git_key['private']
+    end
+
     git destPath do
         repository repo['url']
         reference  repo['remote-branch-name'] || 'master'
         revision   repo['revision'] || 'HEAD'
         checkout_branch repo['local-branch-name']
+        
         action :checkout
+        
+        ssh_wrapper "ssh -i #{userHomePath}/.ssh/id_rsa"
     end
     
     log "message" do
