@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe "ssh_known_hosts"
-
 node['get-gitrepos']['repos'].each do |repoSpec|
     
   repoSpec.each do |repoName, repo|
