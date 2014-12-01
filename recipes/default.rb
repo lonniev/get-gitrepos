@@ -113,6 +113,8 @@ EOT
     ssh_known_hosts_entry 'bitbucket.org'
 
     git destPath do
+        user gitUserName
+        
         repository repo['url']
         reference  repo['remote-branch-name'] || 'master'
         revision   repo['revision'] || 'HEAD'
