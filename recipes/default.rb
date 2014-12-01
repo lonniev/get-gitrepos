@@ -97,6 +97,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
 Host bitbucket.org
   StrictHostKeyChecking no
   IdentityFile #{userHomePath}/.ssh/id_rsa
+  IdentitiesOnly yes
 EOT
     end
     
