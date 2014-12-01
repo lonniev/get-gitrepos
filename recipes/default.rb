@@ -78,6 +78,12 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     destPath = ::File.expand_path( destPath )
 
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
+
+# get gnome-keyring out of the way
+    link "/etc/xdg/autostart/gnome-keyring-ssh.desktop" do
+        to "/dev/null"
+        only_if { File.exists?( "/etc/xdg/autostart/gnome-keyring-ssh.desktop" ) }
+    end
     
     directory "#{userHomePath}/.ssh" do
         owner gitUserName
