@@ -102,6 +102,18 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create
     end
     
+    file "#{userHomePath}/.ssh/config" do
+        owner gitUserName
+        group gitUserName
+        mode 0600
+   
+        content <<-EOT
+Host bitbucket.org
+  StrictHostKeyChecking no
+  IdentityFile #{userHomePath}/.ssh/id_rsa
+EOT
+    end
+    
     file "#{userHomePath}/.ssh/id_rsa" do
         owner gitUserName
         group gitUserName
@@ -117,8 +129,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         checkout_branch repo['local-branch-name']
         
         action :checkout
-        
-        ssh_wrapper "ssh -i #{userHomePath}/.ssh/id_rsa"
     end
     
     log "message" do
