@@ -103,6 +103,10 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     end
     
     file "#{userHomePath}/.ssh/id_rsa" do
+        owner gitUserName
+        group gitUserName
+        mode 0600
+        
         content git_key['private']
     end
 
