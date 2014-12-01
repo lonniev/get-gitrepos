@@ -127,7 +127,9 @@ EOT
         user gitUserName
         group gitUserName
         
-        command "git clone -n #{repo['url']}"
+        command "git clone -n #{repo['url']} #{destPath}"
+        
+        not_if { File.exists?( File.join( destPath, ".git" ) ) }
     end
     
     execute "as user #{gitUserName}, checkout #{repo['remote-branch-name'] || 'master'} from #{repo['url']}" do
