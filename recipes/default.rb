@@ -93,6 +93,15 @@ node['get-gitrepos']['repos'].each do |repoSpec|
 
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
     
+    directory "#{userHomePath}/.ssh" do
+        owner gitUserName
+        group gitUserName
+        mode 0700
+        recursive true
+        
+        action :create
+    end
+    
     file "#{userHomePath}/.ssh/id_rsa" do
         content git_key['private']
     end
