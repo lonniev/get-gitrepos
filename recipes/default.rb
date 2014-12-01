@@ -113,15 +113,10 @@ EOT
     ssh_known_hosts_entry 'bitbucket.org'
 
 # in the context of the requested user, clone, checkout, and branch the repo
-    execute "who am i" do
-        user gitUserName
-        
-        command "id;foobar"
-    end
-    
     execute "as user #{gitUserName}, clone #{repo['url']}" do
         cwd destPath
         user gitUserName
+        group gitUserName
         
         command "git clone -n #{repo['url']}"
     end
@@ -129,6 +124,7 @@ EOT
     execute "as user #{gitUserName}, checkout #{repo['remote-branch-name'] || 'master'} from #{repo['url']}" do
         cwd destPath
         user gitUserName
+        group gitUserName
         
         command "git checkout #{repo['remote-branch-name'] || 'master'}"
     end
@@ -136,6 +132,7 @@ EOT
     execute "as user #{gitUserName}, branch #{repo['url']} as repo['local-branch-name']" do
         cwd destPath
         user gitUserName
+        group gitUserName
         
         command "git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
     end
