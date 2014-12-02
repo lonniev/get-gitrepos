@@ -66,7 +66,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create_if_missing
     end
     
-    destPath = Pathname.new( File.expand_path( repo['destination'] ) )
+    destPath = Pathname.new( repo['destination'].sub( /~/, homeDir ) )
     
     destPath.descend{ |dir|
     
