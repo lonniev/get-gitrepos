@@ -66,14 +66,20 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create_if_missing
     end
     
-    destPath = repo['destination'].sub( /~/, "#{homeDir}/" )
+    destPath = Pathname.expand_path( repo['destination'] )
     
-    directory destPath do
-        owner gitUserName
-        group gitUserName
-        recursive true
-        action :create
-    end
+    destPath.descend{ |dir|
+    
+        directory dir do
+            owner gitUserName
+            group gitUserName
+            recursive true
+            
+            action :create
+            
+            not_if { Dir.exists?( dir ) }
+        end
+    }
 
     destPath = ::File.expand_path( destPath )
 
