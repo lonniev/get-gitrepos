@@ -130,7 +130,7 @@ git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
         content git_key['public']
     end
 ```
-Of course, as is often the case, there is probably some elusive way to do all this with just a few lines of chef DSL. Should you have a more efficient way to achieve the goal, share that with our community. (My apologies to @patrickheeney for hijacking his Issues forum to work this issue; it simply is very similar to the thread that was already here.)
+Of course, as is often the case, there is probably some elusive way to do all this with just a few lines of chef DSL. Should you have a more efficient way to achieve the goal, share that with our community.
 
 Contributing
 ------------
