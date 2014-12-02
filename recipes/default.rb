@@ -70,13 +70,13 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     
     destPath.descend{ |dir|
     
-        directory dir do
+        directory dir.to_s do
             owner gitUserName
             group gitUserName
             
             action :create
             
-            not_if { Dir.exists?( dir ) }
+            not_if { dir.exist?() }
         end
         
         log "message" do
