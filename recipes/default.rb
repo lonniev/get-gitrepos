@@ -73,15 +73,16 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         directory dir do
             owner gitUserName
             group gitUserName
-            recursive true
             
             action :create
             
             not_if { Dir.exists?( dir ) }
         end
+        
+        log "message" do
+            message "Created #{dir} for #{gitUserName} only if necessary."
+            level :info
     }
-
-    destPath = ::File.expand_path( destPath )
 
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
 
@@ -146,7 +147,7 @@ EOT
         command "git checkout #{repo['remote-branch-name'] || 'master'}"
     end
     
-    execute "as user #{gitUserName}, branch #{repo['url']} as repo['local-branch-name']" do
+    execute "as user #{gitUserName}, branch #{repo['url']} as #{repo['local-branch-name']}" do
         cwd destPath
         user gitUserName
         group gitUserName
