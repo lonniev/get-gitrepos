@@ -82,6 +82,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         log "message" do
             message "Created #{dir} for #{gitUserName} only if necessary."
             level :info
+        end
     }
 
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
