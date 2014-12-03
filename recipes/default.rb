@@ -31,23 +31,16 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     homeDir = getHomeCmd.stdout.chomp
     
     gitUserName = repo['user']['username']
-    userHomePath = "#{homeDir}/#{gitUserName}"
+    userHomePath = File.join( homeDir, gitUserName )
     
-    user gitUserName do
-        action   :create
-        username gitUserName
-        password repo['user']['password']
-        comment  repo['user']['fullname']
-        home     userHomePath
-        shell    repo['user']['shell'] || '/bin/bash'
-    end
-    
-    directory userHomePath do
-        owner gitUserName
-        group gitUserName
-        recursive true
-        action :create
-    end
+    if ( !Pathname.new( userHomePath ).directory? ) then {
+        log "message" do
+            message "user #{gitUserName} missing from data_bags/users or not specified to be in devops group."
+            level :warn
+        end
+        
+        next
+    }
     
     sudo gitUserName do
         user gitUserName
