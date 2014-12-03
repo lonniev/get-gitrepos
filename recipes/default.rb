@@ -75,8 +75,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
             group gitUserName
             
             action :create
-            
-            not_if { dir.exist?() }
         end
         
         log "message" do
