@@ -66,7 +66,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create_if_missing
     end
     
-    destPath = Pathname.new( repo['destination'].sub( /~/, homeDir ) )
+    destPath = Pathname.new( repo['destination'].sub( /~/, "#{homeDir}/" ) )
     
     destPath.descend{ |dir|
     
@@ -75,6 +75,8 @@ node['get-gitrepos']['repos'].each do |repoSpec|
             group gitUserName
             
             action :create
+            
+            not_if { dir.exist?() }
         end
         
         log "message" do
