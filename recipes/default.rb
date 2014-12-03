@@ -34,14 +34,14 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     userHomePath = File.join( homeDir, gitUserName )
     
     if ( !Pathname.new( userHomePath ).directory? )
-    {    
+        
         log "message" do
             message "user #{gitUserName} missing from data_bags/users or not specified to be in devops group."
             level :warn
         end
         
         next
-    }
+    end
     
     sudo gitUserName do
         user gitUserName
