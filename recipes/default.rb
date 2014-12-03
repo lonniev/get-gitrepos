@@ -148,29 +148,25 @@ EOT
         command "git checkout #{repo['remote-branch-name'] || 'master'}"
     end
     
-    execute "as user #{gitUserName}, create branch of #{repo['url']} as #{repo['local-branch-name']}" do
-        cwd destPath.to_s
-        user gitUserName
-        group gitUserName
-        
-        command "git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
-        
-        guard_interpreter :bash
-        not_if "git show-branch #{repo['local-branch-name']}", :cwd => destPath.to_s, :user => gitUserName
-    end
-
     execute "as user #{gitUserName}, switch to branch #{repo['local-branch-name']}" do
         cwd destPath.to_s
         user gitUserName
         group gitUserName
         
-        command "git checkout #{repo['local-branch-name']}"
-        
-        guard_interpreter :bash
-        only_if "git show-branch #{repo['local-branch-name']}", :cwd => destPath.to_s, :user => gitUserName
+        command "git show-branch #{repo['local-branch-name']} && git checkout #{repo['local-branch-name']}"
+        ignore_failure true
     end
     
-   log "message" do
+    execute "as user #{gitUserName}, create branch of #{repo['url']} as #{repo['local-branch-name']}" do
+        cwd destPath.to_s
+        user gitUserName
+        group gitUserName
+        
+        command "git show-branch #{repo['local-branch-name']} || git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
+        ignore_failure true
+    end
+
+    log "message" do
         message "Cloned #{repoName} for user #{gitUserName} into #{destPath}."
         level :info
     end
