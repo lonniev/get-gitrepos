@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+users_manage "devops" do
+  action :create
+end
+
 node['get-gitrepos']['repos'].each do |repoSpec|
     
   repoSpec.each do |repoName, repo|

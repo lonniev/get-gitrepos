@@ -8,3 +8,4 @@ version          '0.1.0'
 
 depends          'ssh_known_hosts'
 depends          'sudo'
+depends          'users'
