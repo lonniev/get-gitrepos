@@ -45,6 +45,10 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         action :create
     end
     
+    sudo gitUserName do
+        user gitUserName
+    end
+    
     group "tsusers" do
         action :create
     end
