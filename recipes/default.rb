@@ -156,7 +156,7 @@ EOT
         command "git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
         
         guard_interpreter :bash
-        not_if "git show-branch #{repo['local-branch-name']}"
+        not_if "git show-branch #{repo['local-branch-name']}", :cwd => destPath.to_s, :user => gitUserName
     end
 
     execute "as user #{gitUserName}, switch to branch #{repo['local-branch-name']}" do
@@ -167,7 +167,7 @@ EOT
         command "git checkout #{repo['local-branch-name']}"
         
         guard_interpreter :bash
-        only_if "git show-branch #{repo['local-branch-name']}"
+        only_if "git show-branch #{repo['local-branch-name']}", :cwd => destPath.to_s, :user => gitUserName
     end
     
    log "message" do
