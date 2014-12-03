@@ -153,8 +153,8 @@ EOT
         user gitUserName
         group gitUserName
         
-        command "git show-branch #{repo['local-branch-name']} && git checkout #{repo['local-branch-name']}"
-        ignore_failure true
+        command "git checkout #{repo['local-branch-name']}"
+        only_if "git show-branch #{repo['local-branch-name']}"
     end
     
     execute "as user #{gitUserName}, create branch of #{repo['url']} as #{repo['local-branch-name']}" do
@@ -162,8 +162,8 @@ EOT
         user gitUserName
         group gitUserName
         
-        command "git show-branch #{repo['local-branch-name']} || git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
-        ignore_failure true
+        command "git checkout -b #{repo['local-branch-name']} #{repo['revision'] || 'HEAD'}"
+        not_if "git show-branch #{repo['local-branch-name']}"
     end
 
     log "message" do
