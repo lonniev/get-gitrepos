@@ -47,17 +47,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         user gitUserName
     end
     
-    group "tsusers" do
-        action :create
-    end
-    
-    group "tsusers" do
-        action :modify
-        members gitUserName
-        append  true
-    end
- 
-    xSessionFile = "#{userHomePath}/.xsession"
+    xSessionFile = File.join( userHomePath, ".xsession" )
     
     file xSessionFile do
         owner gitUserName
@@ -79,11 +69,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
             action :create
             
             not_if { dir.exist?() }
-        end
-        
-        log "message" do
-            message "Created #{dir} for #{gitUserName} only if necessary."
-            level :info
         end
     }
 
