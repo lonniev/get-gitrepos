@@ -17,9 +17,18 @@
 # limitations under the License.
 #
 
-users_manage "devops" do
-  action :create
-end
+%w[ "devops" "sysadmin" ].each { |forGroup|
+
+    users_manage forGroup do
+        action [ :remove, :create ]
+    end
+}
+
+include_recipe( sudo )
+
+# add several likely SSH hosts with git repositories
+ssh_known_hosts_entry 'github.com'
+ssh_known_hosts_entry 'bitbucket.org'
 
 node['get-gitrepos']['repos'].each do |repoSpec|
     
@@ -41,10 +50,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         end
         
         next
-    end
-    
-    sudo gitUserName do
-        user gitUserName
     end
     
     xSessionFile = File.join( userHomePath, ".xsession" )
@@ -112,10 +117,6 @@ EOT
         content git_key['public']
     end
     
-# add several likely SSH hosts with git repositories
-    ssh_known_hosts_entry 'github.com'
-    ssh_known_hosts_entry 'bitbucket.org'
-
 # in the context of the requested user, clone, checkout, and branch the repo
     execute "as user #{gitUserName}, clone #{repo['url']}" do
         cwd destPath.to_s
