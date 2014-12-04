@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-%w[ "devops" "sysadmin" ].each { |forGroup|
+%w[ devops sysadmin ].each { |forGroup|
 
     users_manage forGroup do
         action [ :remove, :create ]
