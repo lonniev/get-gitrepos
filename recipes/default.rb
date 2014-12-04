@@ -24,7 +24,7 @@
     end
 }
 
-include_recipe( sudo )
+include_recipe "sudo"
 
 # add several likely SSH hosts with git repositories
 ssh_known_hosts_entry 'github.com'
