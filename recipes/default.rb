@@ -17,29 +17,17 @@
 # limitations under the License.
 #
 
-%w[ devops sysadmin ].each { |forGroup|
+# determine where users' home directories are stored
+getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
+getHomeCmd.run_command
 
-    users_manage forGroup do
-        action [ :remove, :create ]
-    end
-}
-
-include_recipe "sudo"
-
-# add several likely SSH hosts with git repositories
-ssh_known_hosts_entry 'github.com'
-ssh_known_hosts_entry 'bitbucket.org'
+homeDir = getHomeCmd.stdout.chomp
 
 node['get-gitrepos']['repos'].each do |repoSpec|
     
   repoSpec.each do |repoName, repo|
     
-    getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
-    getHomeCmd.run_command
-
-    homeDir = getHomeCmd.stdout.chomp
-    
-    gitUserName = repo['user']['username']
+    gitUserName = repo['username']
     userHomePath = File.join( homeDir, gitUserName )
     
     if ( !Pathname.new( userHomePath ).directory? )
@@ -50,17 +38,6 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         end
         
         next
-    end
-    
-    xSessionFile = File.join( userHomePath, ".xsession" )
-    
-    file xSessionFile do
-        owner gitUserName
-        group gitUserName
-        mode 0644
-        content repo['user']['xsession']
-        
-        action :create_if_missing
     end
     
     destPath = Pathname.new( repo['destination'].sub( /~/, "#{homeDir}/" ) )
@@ -77,31 +54,39 @@ node['get-gitrepos']['repos'].each do |repoSpec|
         end
     }
 
-    git_key = Chef::EncryptedDataBagItem.load( "private_keys", "git_ssh" )
-
-    directory "#{userHomePath}/.ssh" do
-        owner gitUserName
-        group gitUserName
-        mode 0700
-        recursive true
-        
-        action :create
-    end
+    keyId = repo[ 'key_id' ]
+    sshDir = Pathname.new( userHomePath ).join( ".ssh" )
+    idFile = sshDir.join( "id_#{keyId}" )
     
-    file "#{userHomePath}/.ssh/config" do
-        owner gitUserName
-        group gitUserName
-        mode 0600
+    file sshDir.join( "config_#{keyId}" ).to_s do
+      owner gitUserName
+      group gitUserName
+      mode 0600
+        
+      action :create
    
-        content <<-EOT
-Host *
+      content <<-EOT
+      
+Host #{repo['host']}
   StrictHostKeyChecking no
-  IdentityFile #{userHomePath}/.ssh/id_rsa
+  IdentityFile #{idFile}
   IdentitiesOnly yes
 EOT
     end
     
-    file "#{userHomePath}/.ssh/id_rsa" do
+    file sshDir.join( "config" ).to_s do
+      owner gitUserName
+      group gitUserName
+      mode 0600
+        
+      action :create
+      
+      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read(cfg) }.join( "\n" )
+    end
+    
+    git_key = Chef::EncryptedDataBagItem.load( "private_keys", keyId )
+
+    file idFile.to_s do
         owner gitUserName
         group gitUserName
         mode 0600
@@ -109,7 +94,7 @@ EOT
         content git_key['private']
     end
     
-    file "#{userHomePath}/.ssh/id_rsa.pub" do
+    file idFile.sub_ext( ".pub" ).to_s do
         owner gitUserName
         group gitUserName
         mode 0644
