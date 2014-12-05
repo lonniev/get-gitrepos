@@ -68,7 +68,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
       user gitUserName
       path cfgFile.to_s
       
-      options 'User' => 'git', 'StrictHostKeyChecking' => 'no', 'IdentityFile' => '#{idFile}', 'IdentitiesOnly' => 'yes'
+      options 'User' => 'git', 'StrictHostKeyChecking' => 'no', 'IdentityFile' => idFile.to_s, 'IdentitiesOnly' => 'yes'
     end
         
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", keyId )
