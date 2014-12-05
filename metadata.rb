@@ -6,5 +6,7 @@ description      'Clones Git Repositories for Users'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.1.0'
 
-depends          'ssh'
+depends          'ssh_known_hosts'
+depends          'sudo'
+depends          'users'
 depends          'chef-solo-search'
