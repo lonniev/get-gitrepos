@@ -59,12 +59,12 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     idFile = sshDir.join( "id_#{keyId}" )
     cfgFile = sshDir.join( "config" )
     
-    ssh_known_hosts "#{repo['host']}" do
+    chef-ssh_known_hosts "#{repo['host']}" do
       user gitUserName
       hashed true
     end
 
-    ssh_config "#{repo['host']}" do
+    chef-ssh_config "#{repo['host']}" do
       user gitUserName
       path cfgFile.to_s
       
