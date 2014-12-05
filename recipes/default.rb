@@ -59,38 +59,18 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     idFile = sshDir.join( "id_#{keyId}" )
     cfgFile = sshDir.join( "config" )
     
-   # create a small host-specific ssh config file
-    file sshDir.join( "config_#{keyId}" ).to_s do
-      
-      notifies :create, "file[#{cfgFile}]", :immediately
+    ssh_known_hosts "#{repo['host']}" do
+      user gitUserName
+      hashed true
+    end
 
-      owner gitUserName
-      group gitUserName
-      mode 0600
-        
-      action :create
-   
-      content <<-EOT
+    ssh_config "#{repo['host']}" do
+      user gitUserName
+      path cfgFile.to_s
       
-Host #{repo['host']}
-  StrictHostKeyChecking no
-  IdentityFile #{idFile}
-  IdentitiesOnly yes
-EOT
+      options 'User' => 'git', 'StrictHostKeyChecking' => 'no', 'IdentityFile' => '#{idFile}', 'IdentitiesOnly' => 'yes'
     end
-    
-    file cfgFile.to_s do
-      
-      subscribes :create, "file[#{sshDir.join( "config_#{keyId}" )}]", :immediately
-      owner gitUserName
-      group gitUserName
-      mode 0600
         
-      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" )
-        
-      action :nothing
-    end
-    
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", keyId )
 
     file idFile.to_s do
