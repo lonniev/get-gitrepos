@@ -57,8 +57,24 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     keyId = repo[ 'key_id' ]
     sshDir = Pathname.new( userHomePath ).join( ".ssh" )
     idFile = sshDir.join( "id_#{keyId}" )
+    cfgFile = sshDir.join( "config" )
     
+    # declared here but executed after creation of the sub-file that follows
+    file cfgFile.to_s do
+      owner gitUserName
+      group gitUserName
+      mode 0600
+        
+      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" )
+        
+      action :nothing
+    end
+    
+    # create a small host-specific ssh config file
     file sshDir.join( "config_#{keyId}" ).to_s do
+      
+      notifies :create, "file[#{cfgFile}]", :immediately
+
       owner gitUserName
       group gitUserName
       mode 0600
@@ -72,14 +88,6 @@ Host #{repo['host']}
   IdentityFile #{idFile}
   IdentitiesOnly yes
 EOT
-    end
-    
-    file sshDir.join( "config" ).to_s do
-      owner gitUserName
-      group gitUserName
-      mode 0600
-        
-      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" )
     end
     
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", keyId )
