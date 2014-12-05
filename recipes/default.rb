@@ -74,6 +74,17 @@ Host #{repo['host']}
 EOT
     end
     
+    log "message" do
+      message "files are #{Dir.glob( sshDir.join( "config_*" ) )}"
+      level :warn
+    end
+
+    log "message" do
+      message "content would be #{Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) } }"
+      level :warn
+    end
+    
+    
     file sshDir.join( "config" ).to_s do
       owner gitUserName
       group gitUserName
@@ -81,7 +92,7 @@ EOT
         
       action :create
       
-      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read(cfg) }.join( "\n" )
+      content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" )
     end
     
     git_key = Chef::EncryptedDataBagItem.load( "private_keys", keyId )
