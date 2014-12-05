@@ -75,23 +75,15 @@ EOT
     end
     
     log "message" do
-      message "files are #{Dir.glob( sshDir.join( "config_*" ) )}"
+      message "content would be #{Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" ) }"
       level :warn
     end
-
-    log "message" do
-      message "content would be #{Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) } }"
-      level :warn
-    end
-    
     
     file sshDir.join( "config" ).to_s do
       owner gitUserName
       group gitUserName
       mode 0600
         
-      action :create
-      
       content Dir.glob( sshDir.join( "config_*" ) ).map{ |cfg| IO.read( cfg ) }.join( "\n" )
     end
     
