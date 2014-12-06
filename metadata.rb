@@ -8,4 +8,4 @@ version          '0.1.0'
 
 depends          'ssh'
 depends          'chef-solo-search'
-depends          'users'
+depends          'manage-users'

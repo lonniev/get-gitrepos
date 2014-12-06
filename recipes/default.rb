@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe "manage-users"
+
 # determine where users' home directories are stored
 getHomeCmd = Mixlib::ShellOut.new("useradd -D|grep HOME|cut -d '=' -f 2")
 getHomeCmd.run_command
