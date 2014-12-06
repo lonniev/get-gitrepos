@@ -53,6 +53,7 @@ node['get-gitrepos']['repos'].each do |repoSpec|
     
     ssh_known_hosts "#{repo['host']}" do
       user gitUserName
+      path sshDir.join( "known_hosts" ).to_s
       hashed true
     end
 
